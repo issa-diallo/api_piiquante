@@ -45,3 +45,5 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+module.exports = app;
