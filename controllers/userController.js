@@ -21,7 +21,6 @@ exports.signup = async (req, res, next) => {
       .status(201)
       .json({ message: "Thank you, your user has been created !" });
   } catch (error) {
-    // if an error occurs,  an error
      res
       .status(400)
       .json({ message: "Sorry, an error has occured. Thank you again later !" });

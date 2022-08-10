@@ -12,5 +12,3 @@ or
 nodemon server.js
 ```
 
-# Routes 
-
