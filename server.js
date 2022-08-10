@@ -18,18 +18,14 @@ const sauceRoutes = require("./route/sauceRoute");
 const userRoutes = require("./route/userRoute");
 
 /**
- * To handle the POST request coming from the front-end application,
- * we need to extract the JSON body. For this,
- * you just need a very simple middleware,
- * provided by the Express framework.
+ * CORS defines how servers and browsers interact,
+ * specifying which resources can be legitimately requested from the server.
  */
-app.use(express.json());
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization", 'application/json'
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -38,10 +34,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/sauces', sauceRoutes);
-app.use('/api/auth', userRoutes);
+/**
+ * To handle the POST request coming from the front-end application,
+ * we need to extract the JSON body.
+ * For this, you just need a very simple middleware,
+ * provided by the Express framework.
+ */
+app.use(express.json());
+
 app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/auth', userRoutes);
+app.use('/api/sauces', sauceRoutes);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server starting ${port}`);
 });
+
+// Export the app for testing purposes.
+module.exports = app;

@@ -2,44 +2,60 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.Model");
 
-exports.signup = (req, res, next) => {
-  bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => {
-      const user = new User({
-        email: req.body.email,
-        password: hash,
-      });
-      user
-        .save()
-        .then(() => res.status(201).json({ message: "User created !" }))
-        .catch((error) => res.status(400).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
+/**
+ * Create a new user in the database and  the created user in the response.
+ */
+exports.signup = async (req, res, next) => {
+  // create a new user
+  const user = new User({
+    ...req.body,
+    // hash the password with the bcrypt algorithm
+    password: await bcrypt.hash(req.body.password, 10)
+  });
+  try {
+    // save the user in the database
+    const newUser = await user.save();
+    //  the user in the response
+    console.log(newUser);
+     res
+      .status(201)
+      .json({ message: "Thank you, your user has been created !" });
+  } catch (error) {
+     res
+      .status(400)
+      .json({ message: "Sorry, an error has occured. Thank you again later !" });
+  }
 };
-
-exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
-    .then((user) => {
-      if (!user) {
-        return res.status(401).json({ error: "User not found !" });
-      }
-      bcrypt
-        .compare(req.body.password, user.password)
-        .then((valid) => {
-          if (!valid) {
-            return res.status(401).json({ error: "Incorrect password !" });
-          }
-          res.status(200).json({
-            userId: user._id,
-            token: jwt.sign(
-              { userId: user._id },
-              "RANDOM_TOKEN_SECRET",
-              { expiresIn: "24h" }
-            ),
-          });
-        })
-        .catch((error) => res.status(500).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
+/**
+ * Login a user and  a token in the response.
+ */
+exports.login = async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  /**
+   * Check if the user exists
+   */
+  if (!user) {
+     res
+      .status(401)
+      .json({ message: "Sorry, the email or password is incorrect" });
+  }
+  //  the compare function of bcrypt to compare the password entered by the user with the hash stored in the database and  true or false
+  const isPasswordValid = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  // if the password is not valid,  an error
+  if (!isPasswordValid) {
+     res
+      .status(401)
+      .json({ message: "Sorry, the email or password is incorrect" });
+  }
+  // create a token with the userId and the secret key
+  const token = jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
+    expiresIn: "24h"
+  });
+  //  the token in the response
+   res
+    .status(200)
+    .json({ token: token, userId: user._id });
 };
