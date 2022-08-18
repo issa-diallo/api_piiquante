@@ -1,17 +1,32 @@
-# Cloning the repository
-```
- https://github.com/issa-diallo/api_piiquante.git
-```
-# Install
-```
+# App API Piiquante
+
+[![Requirements](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/projects/DWJ_FR_P6/Requirements_DW_P6.pdf/badge.svg)](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/projects/DWJ_FR_P6/Requirements_DW_P6.pdf)
+
+Piiquante is dedicated to the creation of **spicy sauces**
+
+Frontend is available via:
+<https://github.com/issa-diallo/api_piiquante.git>
+
+## Install
+
+```sh
 npm install
 ```
 
-# Run
+## Run
+
+```sh
+npm run dev
 ```
-node server.js
+
+## Lint
+
+```sh
+npm run lint
 ```
-# Frontend
-```
-https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6
+
+## Format
+
+```sh
+npm run format
 ```
