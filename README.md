@@ -11,20 +11,15 @@ Frontend is available via:
 npm install
 ```
 
-## Run
+## :tada: Run
 
 ```sh
 npm run dev
 ```
 
-## Lint
+## :rotating_light: Linting
 
 ```sh
 npm run lint
-```
-
-## Format
-
-```sh
 npm run format
 ```
