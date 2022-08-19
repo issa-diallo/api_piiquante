@@ -23,3 +23,13 @@ npm run dev
 npm run lint
 npm run format
 ```
+
+## Improvements
+
+- more test & test coverage
+- Continuous Integration (e.g. github actions)
+- docker + docker-compose (e.g. mongo)
+- Deployment (Heroku, AWS)
+- Continuous Delivery (e.g. github actions)
+- Sentry error logging
+- Swagger

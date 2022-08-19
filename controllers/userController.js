@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.Model");
 
 /**
- * Create a new user in the database and  the created user in the response.
+ * Create a new user in the database.
  */
 exports.signup = async (req, res, next) => {
   // create a new user
@@ -25,24 +25,15 @@ exports.signup = async (req, res, next) => {
   next();
 };
 /**
- * Login a user and  a token in the response.
+ * Login a user and a token in the response.
  */
 exports.login = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  /**
-   * Check if the user exists
-   */
-  if (!user) {
-    res
-      .status(401)
-      .json({ message: "Sorry, the email or password is incorrect!" });
-  }
-  //  the compare function of bcrypt to compare the password entered by the user with the hash stored in the database and  true or false
-  const isPasswordValid = await bcrypt.compare(
-    req.body.password,
-    user.password
-  );
-  // if the password is not valid,  an error
+  // If the user doesn't exist, he can't login.
+  // the compare function of bcrypt to compare the password entered by the user with the hash stored in the database and  true or false
+  const isPasswordValid =
+    user && (await bcrypt.compare(req.body.password, user.password));
+  // if the password is not valid, an error
   if (!isPasswordValid) {
     res
       .status(401)

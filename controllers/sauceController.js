@@ -1,6 +1,12 @@
 const sauceModel = require("../models/sauceModel");
 const fs = require("fs");
 
+const sauceAllowedOr401 = (sauce, userId, res) => {
+  if (sauce.userId !== userId) {
+    res.status(401).json({ message: "Not authorized" });
+  }
+};
+
 /**
  * Create a new sauce in the database.
  */
@@ -23,7 +29,7 @@ exports.createSauce = async (req, res, next) => {
 };
 
 /**
- * Get all sauces from the database and  the sauces in the response.
+ * Get all sauces from the database and return then in the response.
  */
 exports.getAllSauces = async (req, res, next) => {
   const sauces = await sauceModel.find();
@@ -32,7 +38,7 @@ exports.getAllSauces = async (req, res, next) => {
 };
 
 /**
- * Get a sauce from the database and  the sauce in the response.
+ * Get a sauce from the database and return it in the response.
  */
 exports.getSauce = async (req, res, next) => {
   const sauce = await sauceModel.findOne({ _id: req.params.id });
@@ -54,14 +60,11 @@ exports.modifySauce = async (req, res, next) => {
     : { ...req.body };
   // If the user is not the owner of the sauce, he can't modify it.
   const sauce = await sauceModel.findOne({ _id: req.params.id });
+  // The user is not the owner of the sauce, he can't modify it.
+  sauceAllowedOr401(sauce, req.auth.userId, res);
   const filename = sauce.imageUrl.split("/images/")[1];
   // Delete the image from the images folder.
-  fs.unlink(`images/${filename}`, () => {
-    // The user is not the owner of the sauce, he can't modify it.
-    if (sauce.userId !== req.auth.userId) {
-      res.status(401).json({ message: "Not authorized" });
-    }
-  });
+  fs.unlink(`images/${filename}`, () => {});
   // If the user is the owner of the sauce, he can modify it.
   await sauceModel.updateOne(
     { _id: req.params.id },
@@ -77,9 +80,7 @@ exports.modifySauce = async (req, res, next) => {
 exports.deleteSauce = async (req, res, next) => {
   const sauce = await sauceModel.findOne({ _id: req.params.id });
   // If the user is not the owner of the sauce, he can't delete it.
-  if (sauce.userId !== req.auth.userId) {
-    return res.status(401).json({ message: "Not authorized" });
-  }
+  sauceAllowedOr401(sauce, req.auth.userId, res);
   // Delete the image from the images folder.
   const filename = sauce.imageUrl.split("/images/")[1];
   if (filename) {
