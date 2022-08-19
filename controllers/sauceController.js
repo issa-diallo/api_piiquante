@@ -16,7 +16,7 @@ exports.createSauce = async (req, res, next) => {
     })
     // Save the new sauce in the database.
     await sauce.save()
-    res.status(201).json({ message: 'Thank you, your sauce has been created !' })
+    res.status(201).json({ message: 'Thank you, your sauce has been created!' })
     next()
 }
 
@@ -53,16 +53,14 @@ exports.modifySauce = async (req, res, next) => {
     const filename = sauce.imageUrl.split('/images/')[1]
     // Delete the image from the images folder.
     fs.unlink(`images/${filename}`, () => {
-        console.log('File modifed')
-        // If the user is the owner of the sauce, he can delete it.
+        // The user is not the owner of the sauce, he can't modify it.
+        if (sauce.userId !== req.auth.userId) {
+            res.status(401).json({ message: 'Not authorized' })
+        }
     })
-    // The user is not the owner of the sauce, he can't modify it.
-    if (sauce.userId !== req.auth.userId) {
-        res.status(401).json({ message: 'Not authorized' })
-    }
     // If the user is the owner of the sauce, he can modify it.
     await sauceModel.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    res.status(200).json({ message: 'Thank you, your sauce has been updated !' })
+    res.status(200).json({ message: 'Thank you, your sauce has been updated!' })
     next()
 }
 
@@ -78,12 +76,10 @@ exports.deleteSauce = async (req, res, next) => {
     // Delete the image from the images folder.
     const filename = sauce.imageUrl.split('/images/')[1]
     if (filename) {
-        fs.unlink(`images/${filename}`, () => {
-            console.log('File deleted')
-        })
+        fs.unlink(`images/${filename}`, () => {})
+        // Delete the sauce from the database.
+        await sauceModel.deleteOne({ _id: req.params.id })
+        res.status(204).json({ message: 'Thank you, your sauce has been deleted!' })
     }
-    // Delete the sauce from the database.
-    await sauceModel.deleteOne({ _id: req.params.id })
-    res.status(204).json({ message: 'Thank you, your sauce has been deleted !' })
     next()
 }

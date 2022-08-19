@@ -18,7 +18,7 @@ exports.likeSauce = async (req, res, next) => {
                     $push: { usersLiked: req.body.userId },
                 }
             )
-            res.status(201).json({ message: 'Your like has been added !' })
+            res.status(201).json({ message: 'Your like has been added!' })
         }
 
         // If the user has already liked the sauce, he can't like it again.
@@ -30,7 +30,7 @@ exports.likeSauce = async (req, res, next) => {
                     $pull: { usersLiked: req.body.userId },
                 }
             )
-            res.status(201).json({ message: 'Your like has been removed !' })
+            res.status(201).json({ message: 'Your like has been removed!' })
         }
 
         // If the user is not in the list, he can dislike the sauce.
@@ -42,7 +42,7 @@ exports.likeSauce = async (req, res, next) => {
                     $push: { usersDisliked: req.body.userId },
                 }
             )
-            res.status(201).json({ message: 'Your dislike has been added !' })
+            res.status(201).json({ message: 'Your dislike has been added!' })
         }
 
         // If the user has already disliked the sauce, he can't dislike it again.
@@ -54,7 +54,7 @@ exports.likeSauce = async (req, res, next) => {
                     $pull: { usersDisliked: req.body.userId },
                 }
             )
-            res.status(201).json({ message: 'Your dislike has been removed !' })
+            res.status(201).json({ message: 'Your dislike has been removed!' })
         }
     } catch (error) {
         res.status(500).json({ error })

@@ -16,9 +16,9 @@ exports.signup = async (req, res, next) => {
         // save the user in the database
         await user.save()
         //  the user in the response
-        res.status(201).json({ message: 'Thank you, your user has been created !' })
+        res.status(201).json({ message: 'Thank you, your user has been created!' })
     } catch (error) {
-        res.status(400).json({ message: 'Sorry, an error has occured. Thank you again later !' })
+        res.status(400).json({ message: 'Sorry, an error has occured. Thank you again later!' })
     }
     next()
 }
@@ -31,13 +31,13 @@ exports.login = async (req, res, next) => {
      * Check if the user exists
      */
     if (!user) {
-        res.status(401).json({ message: 'Sorry, the email or password is incorrect' })
+        res.status(401).json({ message: 'Sorry, the email or password is incorrect!' })
     }
     //  the compare function of bcrypt to compare the password entered by the user with the hash stored in the database and  true or false
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password)
     // if the password is not valid,  an error
     if (!isPasswordValid) {
-        res.status(401).json({ message: 'Sorry, the email or password is incorrect' })
+        res.status(401).json({ message: 'Sorry, the email or password is incorrect!' })
     }
     // create a token with the userId and the secret key
     const token = jwt.sign({ userId: user._id }, 'RANDOM_TOKEN_SECRET', {
