@@ -1,4 +1,6 @@
 const multer = require("multer");
+const fs = require("fs");
+
 
 // Multer configuration
 const MIME_TYPES = {
@@ -13,7 +15,9 @@ const MIME_TYPES = {
  */
 const storage = multer.diskStorage({
   // Destination of the file in the server.
+
   destination: (req, file, callback) => {
+    fs.mkdirSync("images");
     callback(null, "images");
   },
   // Name of the file in the server.

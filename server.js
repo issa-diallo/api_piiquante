@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config()
 const path = require("path");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,7 +11,7 @@ const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 main().catch((err) => console.log(err + "\n" + err.stack));
 async function main() {
-  await mongoose.connect("mongodb://localhost:27017/sauces");
+  await mongoose.connect(process.env.DATABASE_URL);
   console.log("Connected to MongoDB");
 }
 

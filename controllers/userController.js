@@ -20,7 +20,7 @@ exports.signup = async (req, res, next) => {
   } catch (error) {
     res
       .status(400)
-      .json({ message: "Sorry, an error has occured. Thank you again later!" });
+      .json( error );
   }
   next();
 };
